@@ -18,12 +18,26 @@ var ViewModel = function() {
 
     self.restaurantList = ko.observableArray([]);
     self.currentRestaurant = ko.observable();
+    self.query = ko.observable();
+
+    self.filterList = function(value) {
+        self.restaurantList.removeAll();
+        for (var x in restaurants) {
+            if (restaurants[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                self.restaurantList.push(restaurants[x]);
+            }
+        }
+    };
+
+    self.query.subscribe(function(newValue) {
+        self.filterList(newValue);
+    });
 
     self.initMap = function() {
         var malvern = {lat: -37.8609852, lng: 145.0268996};
         map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 16,
-          center: malvern
+            zoom: 16,
+            center: malvern
         });
     };
 
@@ -37,7 +51,6 @@ var ViewModel = function() {
         self.restaurantList().forEach(function(restaurant) {
             restaurant.marker().addListener('click', function() {
                 self.setRestaurant(restaurant);
-                console.log(self.currentRestaurant().name());
                 self.openModal();
             });
         });
