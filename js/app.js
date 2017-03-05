@@ -6,6 +6,7 @@ var Restaurant = function(data) {
     this.address = ko.observable(data.address);
     this.lat = ko.observable(data.lat);
     this.lng = ko.observable(data.lng);
+    this.res_id = ko.observable(data.res_id);
     marker = new google.maps.Marker({
         position: {lat: data.lat, lng: data.lng},
         map: map
