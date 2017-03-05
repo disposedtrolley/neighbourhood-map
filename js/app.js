@@ -14,6 +14,7 @@ function initMap() {
 
 var Restaurant = function(data) {
     this.name = ko.observable(data.name);
+    this.address = ko.observable(data.address);
     this.lat = ko.observable(data.lat);
     this.lng = ko.observable(data.lng);
 };
