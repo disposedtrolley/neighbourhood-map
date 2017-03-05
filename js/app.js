@@ -1,27 +1,3 @@
-var restaurants = [
-    {
-        name: 'Do 1 Thing',
-        lat: -37.85773,
-        lng: 145.0293009
-    },
-    {
-        name: 'BOY & Co.',
-        lat: -37.8586496,
-        lng: 145.028872
-    },
-    {
-        name: 'Millstone',
-        lat: -37.865762,
-        lng: 145.0295536
-    }
-];
-
-var Restaurant = function(data) {
-    this.name = ko.observable(data.name);
-    this.lat = ko.observable(data.lat);
-    this.lng = ko.observable(data.lng);
-};
-
 function initMap() {
     var malvern = {lat: -37.8609852, lng: 145.0268996};
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -36,6 +12,11 @@ function initMap() {
     });
 }
 
+var Restaurant = function(data) {
+    this.name = ko.observable(data.name);
+    this.lat = ko.observable(data.lat);
+    this.lng = ko.observable(data.lng);
+};
 
 var ViewModel = function() {
     var self = this;
