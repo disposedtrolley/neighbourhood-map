@@ -50,7 +50,6 @@ var ViewModel = function() {
     self.addClickHandlers = function() {
         self.restaurantList().forEach(function(restaurant) {
             restaurant.marker().addListener('click', function() {
-                self.setRestaurant(restaurant);
                 self.openModal();
             });
         });
@@ -60,7 +59,8 @@ var ViewModel = function() {
         self.currentRestaurant(clickedRestaurant);
     };
 
-    self.openModal = function() {
+    self.openModal = function(restaurant) {
+        self.setRestaurant(restaurant);
         $('#detail-modal').modal('show');
     };
 
