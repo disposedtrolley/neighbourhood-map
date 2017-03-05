@@ -10,7 +10,6 @@ var Restaurant = function(data) {
         position: {lat: data.lat, lng: data.lng},
         map: map
     });
-
     this.marker = ko.observable(marker);
 };
 
@@ -32,7 +31,6 @@ var ViewModel = function() {
         restaurants.forEach(function(restaurant) {
             self.restaurantList.push(new Restaurant(restaurant));
         });
-        self.currentRestaurant = ko.observable(self.restaurantList()[0]);
     };
 
     self.addClickHandlers = function() {
@@ -50,7 +48,6 @@ var ViewModel = function() {
     };
 
     self.openModal = function() {
-        console.log(self.currentRestaurant());
         $('#detail-modal').modal('show');
     };
 
