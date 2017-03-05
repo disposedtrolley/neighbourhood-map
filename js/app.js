@@ -16,16 +16,16 @@ var restaurants = [
     }
 ];
 
-var Marker = function(data) {
+var Restaurant = function(data) {
     this.name = ko.observable(data.name);
     this.lat = ko.observable(data.lat);
     this.lng = ko.observable(data.lng);
 };
 
 function initMap() {
-    var malvern = {lat: -37.8584378, lng: 145.0181495};
+    var malvern = {lat: -37.8609852, lng: 145.0268996};
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 15,
+      zoom: 16,
       center: malvern
     });
     restaurants.forEach(function(restaurant) {
@@ -39,7 +39,10 @@ function initMap() {
 
 var ViewModel = function() {
     var self = this;
-    initMap();
+    this.restaurantList = ko.observableArray([]);
+    restaurants.forEach(function(restaurant) {
+        self.restaurantList.push(new Restaurant(restaurant));
+    });
 };
 
 ko.applyBindings(new ViewModel());
