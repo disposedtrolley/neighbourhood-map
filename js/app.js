@@ -1,4 +1,5 @@
 var map;
+var infowindow;
 
 var Restaurant = function(data) {
     var marker;
@@ -12,6 +13,17 @@ var Restaurant = function(data) {
         map: map
     });
     this.marker = ko.observable(marker);
+    var contentString = '<div class="info-window">'+
+        '<h2 class="zomato-name"></h2>'+
+        '<div id="bodyContent">'+
+        '<p class="zomato-address"></p>'+
+        '<p>Rating: <span class="zomato-rating"></span>/5</p>' +
+        '<a class="zomato-url" href="">View on Zomato</a>' +
+        '</div>'+
+        '</div>';
+    infowindow = new google.maps.InfoWindow({
+        content: contentString
+    });
 };
 
 var ViewModel = function() {
@@ -51,19 +63,17 @@ var ViewModel = function() {
     self.addClickHandlers = function() {
         self.restaurantList().forEach(function(restaurant) {
             restaurant.marker().addListener('click', function() {
-                self.openModal();
+                if (infowindow) {
+                    infowindow.close();
+                }
+                infowindow.open(map, restaurant.marker());
+                self.searchZomato(restaurant.res_id);
             });
         });
     };
 
     self.setRestaurant = function(clickedRestaurant) {
         self.currentRestaurant(clickedRestaurant);
-    };
-
-    self.openModal = function(restaurant) {
-        self.setRestaurant(restaurant);
-        $('#detail-modal').modal('show');
-        self.searchZomato(restaurant.res_id);
     };
 
     self.searchZomato = function(res_id) {
@@ -77,6 +87,8 @@ var ViewModel = function() {
                 'res_id': res_id
             },
             success: function(response) {
+                $('.zomato-name').text(response.name);
+                $('.zomato-address').text(response.location.address);
                 $('.zomato-url').attr('href', response.url);
                 $('.zomato-rating').text(response.user_rating.aggregate_rating);
             },
