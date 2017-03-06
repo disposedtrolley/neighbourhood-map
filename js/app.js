@@ -77,13 +77,11 @@ var ViewModel = function() {
                 'res_id': res_id
             },
             success: function(response) {
-                console.log(response);
-                console.log(response.user_rating.aggregate_rating);
                 $('.zomato-url').attr('href', response.url);
                 $('.zomato-rating').text(response.user_rating.aggregate_rating);
             },
             error: function(xhr) {
-                console.log(xhr);
+                window.alert("Data from Zomato could not be loaded.");
             }
         });
     };

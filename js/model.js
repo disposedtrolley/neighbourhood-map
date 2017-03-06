@@ -19,5 +19,19 @@ var restaurants = [
         lat: -37.865762,
         lng: 145.0295536,
         res_id: 16585055
+    },
+    {
+        name: 'The Distributor',
+        address: '80 Glenferrie Rd, Malvern VIC 3144',
+        lat: -37.862682,
+        lng: 145.0263343,
+        res_id: 16713936
+    },
+    {
+        name: 'Pizza Religion',
+        address: '12-18 Claremont Ave, Malvern VIC 3144',
+        lat: -37.8660572,
+        lng: 145.0280821,
+        res_id: 16713886
     }
 ];
