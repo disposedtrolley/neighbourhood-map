@@ -37,7 +37,7 @@ var ViewModel = function() {
     self.initMap = function() {
         var malvern = {lat: -37.8609852, lng: 145.0268996};
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 16,
+            zoom: 14,
             center: malvern
         });
     };
@@ -63,6 +63,29 @@ var ViewModel = function() {
     self.openModal = function(restaurant) {
         self.setRestaurant(restaurant);
         $('#detail-modal').modal('show');
+        self.searchZomato(restaurant.res_id);
+    };
+
+    self.searchZomato = function(res_id) {
+        var baseUrl = 'https://developers.zomato.com/api/v2.1/restaurant';
+        $.ajax({
+            url: baseUrl,
+            headers: {
+                'user-key': '66617cc443e6f236716ce3d534bb7d3c'
+            },
+            data: {
+                'res_id': res_id
+            },
+            success: function(response) {
+                console.log(response);
+                console.log(response.user_rating.aggregate_rating);
+                $('.zomato-url').attr('href', response.url);
+                $('.zomato-rating').text(response.user_rating.aggregate_rating);
+            },
+            error: function(xhr) {
+                console.log(xhr);
+            }
+        });
     };
 
     google.maps.event.addDomListener(window, 'load', function() {

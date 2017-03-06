@@ -1,10 +1,10 @@
 var restaurants = [
     {
-        name: 'Do 1 Thing',
-        address: '254 Glenferrie Rd, Malvern VIC 3144, Australia',
-        lat: -37.85773,
-        lng: 145.0293009,
-        res_id: 16711314
+        name: "Major Tom's",
+        address: '165 Waverley Rd, Malvern East VIC 3145',
+        lat: -37.8760032,
+        lng: 145.0480209,
+        res_id: 18151510
     },
     {
         name: 'BOY & Co.',
