@@ -70,13 +70,17 @@ var ViewModel = function() {
     self.addClickHandlers = function() {
         self.restaurantList().forEach(function(restaurant) {
             restaurant.marker().addListener('click', function() {
-                if (infowindow) {
-                    infowindow.close();
-                }
-                infowindow.open(map, restaurant.marker());
-                self.searchZomato(restaurant.res_id);
+                self.restaurantClick(restaurant);
             });
         });
+    };
+
+    self.restaurantClick = function(restaurant) {
+        if (infowindow) {
+            infowindow.close();
+        }
+        infowindow.open(map, restaurant.marker());
+        self.searchZomato(restaurant.res_id);
     };
 
     self.setRestaurant = function(clickedRestaurant) {
