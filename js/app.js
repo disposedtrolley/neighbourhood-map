@@ -1,6 +1,9 @@
 var map;
 var infowindow;
 
+/*
+    Model for each restaurant.
+ */
 var Restaurant = function(data) {
     var marker;
     this.name = ko.observable(data.name);
@@ -31,11 +34,14 @@ var ViewModel = function() {
     var self = this;
 
     self.restaurantList = ko.observableArray([]);
-    self.currentRestaurant = ko.observable();
-    self.query = ko.observable();
     self.filteredList = ko.observableArray([]);
+    self.currentRestaurant = ko.observable();
+    self.query = ko.observable();   // search query
 
     self.filterList = function(value) {
+        /*
+            Filters the restaurant list based on the search query.
+         */
         self.filteredList([]);
         for (var x in self.restaurantList()) {
             var restaurantName = self.restaurantList()[x].name().toLowerCase();
@@ -43,31 +49,41 @@ var ViewModel = function() {
                 self.filteredList.push(self.restaurantList()[x]);
                 self.restaurantList()[x].marker().setMap(map);
             } else {
+                // Set the map to null to hide markers of other restaurants.
                 self.restaurantList()[x].marker().setMap(null);
             }
         }
     };
 
+    // Subscribe to changes on the search query.
     self.query.subscribe(function(newValue) {
-        console.log(newValue);
         self.filterList(newValue);
     });
 
     self.initMap = function() {
-        var malvern = {lat: -37.8609852, lng: 145.0268996};
+        /*
+            Initialise the map with coordinates for the local neighbourhood.
+         */
+        var centre = {lat: -37.8609852, lng: 145.0268996};
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
-            center: malvern
+            center: centre
         });
     };
 
     self.addRestaurants = function() {
+        /*
+            Create and add all restaurants in the model.
+         */
         restaurants.forEach(function(restaurant) {
             self.restaurantList.push(new Restaurant(restaurant));
         });
     };
 
     self.addClickHandlers = function() {
+        /*
+            Add click handlers to all restaurants.
+         */
         self.restaurantList().forEach(function(restaurant) {
             restaurant.marker().addListener('click', function() {
                 self.restaurantClick(restaurant);
@@ -76,18 +92,29 @@ var ViewModel = function() {
     };
 
     self.restaurantClick = function(restaurant) {
+        /*
+            Set click behaviour for a restaurant
+         */
+
+        // centre the map on the selected restaurant.
         map.panTo(new google.maps.LatLng(restaurant.lat(), restaurant.lng()));
+        // close other infowindows.
         if (infowindow) {
             infowindow.close();
         }
         infowindow.open(map, restaurant.marker());
+        // call the Zomato API to fetch rating and URL.
         self.searchZomato(restaurant.res_id);
+        // animate the marker.
         self.setMarkerAnimation(restaurant);
     };
 
     self.setMarkerAnimation = function(restaurant) {
+        /*
+            Set the marker animation to bounce once.
+         */
         restaurant.marker().setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout( function() { restaurant.marker().setAnimation(null); }, 750);
+        setTimeout( function() { restaurant.marker().setAnimation(null); }, 700);
     };
 
     self.setRestaurant = function(clickedRestaurant) {
@@ -95,6 +122,9 @@ var ViewModel = function() {
     };
 
     self.searchZomato = function(res_id) {
+        /*
+            Call the Zomato API with a restaurant ID to fetch name, address, url, and rating.
+         */
         var baseUrl = 'https://developers.zomato.com/api/v2.1/restaurant';
         $.ajax({
             url: baseUrl,
@@ -117,6 +147,7 @@ var ViewModel = function() {
     };
 
     google.maps.event.addDomListener(window, 'load', function() {
+        // Call functions after the map has loaded.
         self.initMap();
         self.addRestaurants();
         self.addClickHandlers();

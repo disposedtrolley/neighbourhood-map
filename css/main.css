@@ -1,8 +1,10 @@
+/* Fill the entire viewport. */
 #map {
     height: 100vh;
     background-color: grey;
 }
 
+/* Remove padding from sides of the map. */
 .col-lg-12 {
     padding: 0;
 }
