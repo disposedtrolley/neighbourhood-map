@@ -10,7 +10,8 @@ var Restaurant = function(data) {
     this.res_id = ko.observable(data.res_id);
     marker = new google.maps.Marker({
         position: {lat: data.lat, lng: data.lng},
-        map: map
+        map: map,
+        animation: google.maps.Animation.DROP
     });
     this.marker = ko.observable(marker);
     var contentString = '<div class="info-window">'+
@@ -32,17 +33,23 @@ var ViewModel = function() {
     self.restaurantList = ko.observableArray([]);
     self.currentRestaurant = ko.observable();
     self.query = ko.observable();
+    self.filteredList = ko.observableArray([]);
 
     self.filterList = function(value) {
-        self.restaurantList.removeAll();
-        for (var x in restaurants) {
-            if (restaurants[x].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                self.restaurantList.push(restaurants[x]);
+        self.filteredList([]);
+        for (var x in self.restaurantList()) {
+            var restaurantName = self.restaurantList()[x].name().toLowerCase();
+            if (restaurantName.indexOf(value.toLowerCase()) >= 0) {
+                self.filteredList.push(self.restaurantList()[x]);
+                self.restaurantList()[x].marker().setMap(map);
+            } else {
+                self.restaurantList()[x].marker().setMap(null);
             }
         }
     };
 
     self.query.subscribe(function(newValue) {
+        console.log(newValue);
         self.filterList(newValue);
     });
 
@@ -102,6 +109,7 @@ var ViewModel = function() {
         self.initMap();
         self.addRestaurants();
         self.addClickHandlers();
+        self.filteredList(self.restaurantList());
     });
 };
 

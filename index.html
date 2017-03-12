@@ -16,7 +16,7 @@
                     <div id="custom-search-input">
                         <input type="text" class="form-control input-lg" placeholder="Guilty Pleasures" data-bind="value: query, valueUpdate: 'keyup'"/>
                     </div>
-                    <!-- ko foreach: restaurantList -->
+                    <!-- ko foreach: filteredList -->
                     <div class="restaurant" data-bind="click: $parent.openModal">
                         <h4 class="text" data-bind="text: name"></h4>
                     </div>
