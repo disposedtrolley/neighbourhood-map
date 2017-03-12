@@ -17,7 +17,7 @@
                         <input type="text" class="form-control input-lg" placeholder="Guilty Pleasures" data-bind="value: query, valueUpdate: 'keyup'"/>
                     </div>
                     <!-- ko foreach: filteredList -->
-                    <div class="restaurant" data-bind="click: $parent.openModal">
+                    <div class="restaurant" data-bind="click: $parent.restaurantClick">
                         <h4 class="text" data-bind="text: name"></h4>
                     </div>
                     <!-- /ko -->
