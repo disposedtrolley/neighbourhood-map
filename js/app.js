@@ -76,11 +76,18 @@ var ViewModel = function() {
     };
 
     self.restaurantClick = function(restaurant) {
+        map.panTo(new google.maps.LatLng(restaurant.lat(), restaurant.lng()));
         if (infowindow) {
             infowindow.close();
         }
         infowindow.open(map, restaurant.marker());
         self.searchZomato(restaurant.res_id);
+        self.setMarkerAnimation(restaurant);
+    };
+
+    self.setMarkerAnimation = function(restaurant) {
+        restaurant.marker().setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout( function() { restaurant.marker().setAnimation(null); }, 750);
     };
 
     self.setRestaurant = function(clickedRestaurant) {
