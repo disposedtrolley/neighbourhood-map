@@ -32,7 +32,7 @@ var ViewModel = function() {
          */
         self.filteredList([]);
         for (var x in self.restaurantList()) {
-            var restaurantName = self.restaurantList()[x].name().toLowerCase();
+            var restaurantName = self.restaurantList()[x].name.toLowerCase();
             if (restaurantName.indexOf(value.toLowerCase()) >= 0) {
                 self.filteredList.push(self.restaurantList()[x]);
             } else {
