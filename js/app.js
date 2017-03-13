@@ -6,17 +6,16 @@ var infowindow;
  */
 var Restaurant = function(data) {
     var marker;
-    this.name = ko.observable(data.name);
-    this.address = ko.observable(data.address);
-    this.lat = ko.observable(data.lat);
-    this.lng = ko.observable(data.lng);
-    this.res_id = ko.observable(data.res_id);
+    this.name = data.name;
+    this.lat = data.lat;
+    this.lng = data.lng;
+    this.res_id = data.res_id;
     marker = new google.maps.Marker({
         position: {lat: data.lat, lng: data.lng},
         map: map,
         animation: google.maps.Animation.DROP
     });
-    this.marker = ko.observable(marker);
+    this.marker = marker;
     var contentString = '<div class="info-window">'+
         '<h2 class="zomato-name"></h2>'+
         '<div id="bodyContent">'+
@@ -47,10 +46,10 @@ var ViewModel = function() {
             var restaurantName = self.restaurantList()[x].name().toLowerCase();
             if (restaurantName.indexOf(value.toLowerCase()) >= 0) {
                 self.filteredList.push(self.restaurantList()[x]);
-                self.restaurantList()[x].marker().setMap(map);
+                self.restaurantList()[x].marker.setMap(map);
             } else {
                 // Set the map to null to hide markers of other restaurants.
-                self.restaurantList()[x].marker().setMap(null);
+                self.restaurantList()[x].marker.setMap(null);
             }
         }
     };
@@ -85,7 +84,7 @@ var ViewModel = function() {
             Add click handlers to all restaurants.
          */
         self.restaurantList().forEach(function(restaurant) {
-            restaurant.marker().addListener('click', function() {
+            restaurant.marker.addListener('click', function() {
                 self.restaurantClick(restaurant);
             });
         });
@@ -102,7 +101,7 @@ var ViewModel = function() {
         if (infowindow) {
             infowindow.close();
         }
-        infowindow.open(map, restaurant.marker());
+        infowindow.open(map, restaurant.marker;
         // call the Zomato API to fetch rating and URL.
         self.searchZomato(restaurant.res_id);
         // animate the marker.
@@ -113,8 +112,8 @@ var ViewModel = function() {
         /*
             Set the marker animation to bounce once.
          */
-        restaurant.marker().setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout( function() { restaurant.marker().setAnimation(null); }, 700);
+        restaurant.marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout( function() { restaurant.marker.setAnimation(null); }, 700);
     };
 
     self.setRestaurant = function(clickedRestaurant) {
