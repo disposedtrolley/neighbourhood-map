@@ -30,8 +30,15 @@ var ViewModel = function() {
         /*
             Filters the restaurant list based on the search query.
          */
+
+        // close other infowindows.
+        if (infowindow) {
+            infowindow.close();
+        }
+
         self.filteredList([]);
         for (var x in self.restaurantList()) {
+            self.restaurantList()[x].marker.setVisible(true);
             var restaurantName = self.restaurantList()[x].name.toLowerCase();
             if (restaurantName.indexOf(value.toLowerCase()) >= 0) {
                 self.filteredList.push(self.restaurantList()[x]);
@@ -56,6 +63,7 @@ var ViewModel = function() {
             zoom: 14,
             center: centre
         });
+        infowindow = new google.maps.InfoWindow();
     };
 
     self.addRestaurants = function() {
@@ -101,9 +109,7 @@ var ViewModel = function() {
             '</div>'+
             '</div>';
             // create the infowindow.
-            infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
+            infowindow.setContent(contentString);
             // animate the marker.
             self.setMarkerAnimation(restaurant);
             infowindow.open(map, restaurant.marker);
