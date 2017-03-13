@@ -16,17 +16,6 @@ var Restaurant = function(data) {
         animation: google.maps.Animation.DROP
     });
     this.marker = marker;
-    var contentString = '<div class="info-window">'+
-        '<h2 class="zomato-name"></h2>'+
-        '<div id="bodyContent">'+
-        '<p class="zomato-address"></p>'+
-        '<p>Rating: <span class="zomato-rating"></span>/5</p>' +
-        '<a class="zomato-url" href="">View on Zomato</a>' +
-        '</div>'+
-        '</div>';
-    infowindow = new google.maps.InfoWindow({
-        content: contentString
-    });
 };
 
 var ViewModel = function() {
@@ -100,11 +89,24 @@ var ViewModel = function() {
         if (infowindow) {
             infowindow.close();
         }
-        infowindow.open(map, restaurant.marker;
-        // call the Zomato API to fetch rating and URL.
-        self.searchZomato(restaurant.res_id);
+        // call the Zomato API to fetch restaurant details.
+        var data = self.searchZomato(restaurant.res_id);
+        // set the infowindow content.
+        var contentString = '<div class="info-window">'+
+        '<h2 class="zomato-name">' + data.name + '</h2>'+
+        '<div id="bodyContent">'+
+        '<p class="zomato-address">' + data.address + '</p>'+
+        '<p>Rating: <span class="zomato-rating">' + data.rating + '</span>/5</p>' +
+        '<a class="zomato-url" href="' + data.url + '">View on Zomato</a>' +
+        '</div>'+
+        '</div>';
+        // create the infowindow.
+        restaurant.infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
         // animate the marker.
         self.setMarkerAnimation(restaurant);
+        infowindow.open(map, restaurant.marker);
     };
 
     self.setMarkerAnimation = function(restaurant) {
@@ -123,6 +125,12 @@ var ViewModel = function() {
         /*
             Call the Zomato API with a restaurant ID to fetch name, address, url, and rating.
          */
+        var result = {
+            name: null,
+            address: null,
+            url: null,
+            rating: null
+        };
         var baseUrl = 'https://developers.zomato.com/api/v2.1/restaurant';
         $.ajax({
             url: baseUrl,
@@ -133,15 +141,16 @@ var ViewModel = function() {
                 'res_id': res_id
             },
             success: function(response) {
-                $('.zomato-name').text(response.name);
-                $('.zomato-address').text(response.location.address);
-                $('.zomato-url').attr('href', response.url);
-                $('.zomato-rating').text(response.user_rating.aggregate_rating);
+                result.name = response.name;
+                result.address = response.location.address;
+                result.url = response.url;
+                result.rating = response.user_rating.aggregate_rating;
             },
             error: function(xhr) {
                 window.alert("Data from Zomato could not be loaded.");
             }
         });
+        return result;
     };
 
     google.maps.event.addDomListener(window, 'load', function() {
