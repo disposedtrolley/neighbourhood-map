@@ -46,10 +46,9 @@ var ViewModel = function() {
             var restaurantName = self.restaurantList()[x].name().toLowerCase();
             if (restaurantName.indexOf(value.toLowerCase()) >= 0) {
                 self.filteredList.push(self.restaurantList()[x]);
-                self.restaurantList()[x].marker.setMap(map);
             } else {
-                // Set the map to null to hide markers of other restaurants.
-                self.restaurantList()[x].marker.setMap(null);
+                // Hide markers for locations not meeting search criteria.
+                self.restaurantList()[x].marker.setVisible(false);
             }
         }
     };
