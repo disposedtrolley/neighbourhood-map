@@ -84,29 +84,30 @@ var ViewModel = function() {
          */
 
         // centre the map on the selected restaurant.
-        map.panTo(new google.maps.LatLng(restaurant.lat(), restaurant.lng()));
+        map.panTo(new google.maps.LatLng(restaurant.lat, restaurant.lng));
         // close other infowindows.
         if (infowindow) {
             infowindow.close();
         }
         // call the Zomato API to fetch restaurant details.
-        var data = self.searchZomato(restaurant.res_id);
-        // set the infowindow content.
-        var contentString = '<div class="info-window">'+
-        '<h2 class="zomato-name">' + data.name + '</h2>'+
-        '<div id="bodyContent">'+
-        '<p class="zomato-address">' + data.address + '</p>'+
-        '<p>Rating: <span class="zomato-rating">' + data.rating + '</span>/5</p>' +
-        '<a class="zomato-url" href="' + data.url + '">View on Zomato</a>' +
-        '</div>'+
-        '</div>';
-        // create the infowindow.
-        restaurant.infowindow = new google.maps.InfoWindow({
-            content: contentString
+        self.searchZomato(restaurant.res_id, function(result) {
+            // set the infowindow content.
+            var contentString = '<div class="info-window">'+
+            '<h2 class="zomato-name">' + result.name + '</h2>'+
+            '<div id="bodyContent">'+
+            '<p class="zomato-address">' + result.address + '</p>'+
+            '<p>Rating: <span class="zomato-rating">' + result.rating + '</span>/5</p>' +
+            '<a class="zomato-url" href="' + result.url + '">View on Zomato</a>' +
+            '</div>'+
+            '</div>';
+            // create the infowindow.
+            infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            // animate the marker.
+            self.setMarkerAnimation(restaurant);
+            infowindow.open(map, restaurant.marker);
         });
-        // animate the marker.
-        self.setMarkerAnimation(restaurant);
-        infowindow.open(map, restaurant.marker);
     };
 
     self.setMarkerAnimation = function(restaurant) {
@@ -121,7 +122,7 @@ var ViewModel = function() {
         self.currentRestaurant(clickedRestaurant);
     };
 
-    self.searchZomato = function(res_id) {
+    self.searchZomato = function(res_id, callback) {
         /*
             Call the Zomato API with a restaurant ID to fetch name, address, url, and rating.
          */
@@ -145,21 +146,25 @@ var ViewModel = function() {
                 result.address = response.location.address;
                 result.url = response.url;
                 result.rating = response.user_rating.aggregate_rating;
+                callback(result);
             },
             error: function(xhr) {
-                window.alert("Data from Zomato could not be loaded.");
+                window.alert('Data from Zomato could not be loaded.');
             }
         });
-        return result;
     };
 
-    google.maps.event.addDomListener(window, 'load', function() {
-        // Call functions after the map has loaded.
-        self.initMap();
-        self.addRestaurants();
-        self.addClickHandlers();
-        self.filteredList(self.restaurantList());
-    });
+    var url = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBzUdf0hdMf2Hhz8aTPu3PplDMylKLzHno';
+    $.getScript(url)
+        .done(function() {
+            self.initMap();
+            self.addRestaurants();
+            self.addClickHandlers();
+            self.filteredList(self.restaurantList());
+        })
+        .fail(function() {
+            console.log("error loading map");
+        });
 };
 
 ko.applyBindings(new ViewModel());
