@@ -126,12 +126,6 @@ var ViewModel = function() {
         /*
             Call the Zomato API with a restaurant ID to fetch name, address, url, and rating.
          */
-        var result = {
-            name: null,
-            address: null,
-            url: null,
-            rating: null
-        };
         var baseUrl = 'https://developers.zomato.com/api/v2.1/restaurant';
         $.ajax({
             url: baseUrl,
@@ -142,10 +136,12 @@ var ViewModel = function() {
                 'res_id': res_id
             },
             success: function(response) {
-                result.name = response.name;
-                result.address = response.location.address;
-                result.url = response.url;
-                result.rating = response.user_rating.aggregate_rating;
+                var result = {
+                    name: response.name,
+                    address: response.location.address,
+                    url: response.url,
+                    rating: response.user_rating.aggregate_rating
+                };
                 callback(result);
             },
             error: function(xhr) {
@@ -163,7 +159,7 @@ var ViewModel = function() {
             self.filteredList(self.restaurantList());
         })
         .fail(function() {
-            console.log("error loading map");
+            window.alert('Google Maps could not be loaded.');
         });
 };
 
